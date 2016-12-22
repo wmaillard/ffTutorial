@@ -18,19 +18,28 @@ function anotherImageLoaded(){
 }
  
 function imagesDoneLoading() {
+		$('#closeIntro').text('Start!');
         $('#closeIntro').click(function(e) {
-            if($('#skipTutorial').is(':checked')){
-                for(var i in firstTime){
-                    firstTime[i] = false;
-                }
-            }else{
-                    $('#showShop').addClass('breathing');
-            }
+          
             if ($('#screenName').val() === "") {
                 $("#screenName").fadeIn(100).fadeOut(100).fadeIn(100).fadeOut(100).fadeIn(100);
             } else {
-                name = $('#screenName').val();
+				name = $('#screenName').val();
+				$('#tutorialModal').modal({
+					backdrop: 'static',
+					keyboard: false
+				})
+				nextMessage(message2(name));
+				$('#tutorialModalButton').text('More...').click(function(e){
+					nextMessage(message3);
+					$('#tutorialModalButton').text('Try It!').click(function(e){
+						$('#showShop').addClass('breathing');
+						$('#tutorialModal').modal('hide');
+					});
+				});
+			
                 $('#startInfo').toggle();
+
                 $('#introTeamBox').toggle();
                 setTimeout(function() {
                     $('#introTeamBox').fadeOut('slow');
@@ -39,8 +48,8 @@ function imagesDoneLoading() {
             playerTeam = 'blue';
              if(playerTeam === 'blue'){
                 //cacheMapTiles()
-                zoomPanTo(castles[1].x, castles[1].y, zoom, { x: false, y: false }, true)
-                zoomToOne(castles[1].x, castles[1].y, .35);
+                zoomPanTo(castles[0].x, castles[0].y, zoom, { x: false, y: false }, true)
+                zoomToOne(castles[0].x, castles[0].y, .35);
             
              }else if(playerTeam === 'orange'){
                  //cacheMapTiles(true);

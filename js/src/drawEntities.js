@@ -48,6 +48,9 @@ function drawEntityCircles(entities, ctx, playerTeam) {
 }
 
 function drawEntities(entities, ctx, lock, clear) {
+	if(circles.quarry && entities[-1]){
+		drawQuarryCircle(entities[-1]);
+	}
     var directions = {
         'S': 0,
         'W': 1,
@@ -143,14 +146,16 @@ function scaleDown(justCharacter, height, width) {
 }
 
 function drawHighlight(entity, canvas) {
-    var ctx = canvas.getContext('2d');
-    ctx.save();
-    ctx.beginPath();
-    ctx.ellipse(canvas.width / 2, canvas.height * 2 / 3, canvas.width / 2.5, canvas.width / 3, 0, 0, Math.PI * 2);
-    ctx.lineWidth = 5 * zoom;
-    ctx.strokeStyle = 'red';
-    ctx.stroke();
-    ctx.restore();
+	var ctx = canvas.getContext('2d');
+	var multiplier = 1;
+	var gradient = 'red';
+		ctx.save();
+		ctx.beginPath();
+		ctx.ellipse(canvas.width / 2, canvas.height * 2 / 3, multiplier * canvas.width / 2.5, multiplier * canvas.width / 3, 0, 0, Math.PI * 2);
+		ctx.lineWidth = 5 * zoom;
+		ctx.strokeStyle = gradient;
+		ctx.stroke();
+		ctx.restore();
 }
 
 function drawHealthBar(entity, canvas) {

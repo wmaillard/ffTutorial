@@ -29,7 +29,6 @@ var scores = {orange: 1000, blue: 1000};
 var playerTeam = null;
 var name = "";
 var allPlayerInfo;
-var firstTime = {showShop : true, buyEntity : false, placeEntity : false, selectEntity : false, zoomToEntity : false, moveEntity : false}
 var tips = ['You can zoom in and out by pinching the screen or scrolling with the mouse wheel.', 'Capturing castles will earn you 3x as many points as killing enemies.', 'You can double tap the map to quickly zoom in and out.']
 /*Test if android*/
 var ua = navigator.userAgent.toLowerCase();
@@ -42,8 +41,8 @@ var columns = 1;
 
 
 var backgroundOffset = {
-        "x": 0,
-        "y": 0
+        "x": -levelWidth * 32 + $('#gameContainer').width(),
+        "y": -levelHeight * 32 + $('#gameContainer').height()
     } //Default offset view of map
 var currentCoords = {
         'x': 0,

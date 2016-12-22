@@ -19,6 +19,15 @@ function clickGameContainer(e) {
     var point = convertScreenToMapPoint(e.pointers[0].clientX, e.pointers[0].clientY, zoom)
     var entityAtClick = entityIsThere(point.x, point.y);
     if (entityAtClick && !entityAtClick.dead && entityAtClick.playerId === playerId) {
+		if(firstTime.selectEntity){
+			$('#tutorialModal').modal({
+				backdrop: 'static',
+				keyboard: false
+			})
+			firstTime.selectEntity = false;
+			circles.quarry = true;
+			nextMessage(message6);
+		}
         deselectAllEntities();
         selectedEntities[entityAtClick.id] = entityAtClick;
         if (!$('#allEntities').hasClass('buttonDown')) {
@@ -27,26 +36,49 @@ function clickGameContainer(e) {
         redrawBackground();
     } else if (boughtEntity && playerTeam && !entityIsBlocked(point.x, point.y)) {
         if (firstTime.placeEntity) {
-            $('#nextEntity').addClass('breathing');
-            $('#tutorialAdd').fadeOut('slow');
+			setInterval(function(){
+				if(moveEntities.moveEntities(entities)){
+					redrawBackground()
+				};
+					
+					
+					}, 50)
+			$('#tutorialModal').modal({
+				backdrop: 'static',
+				keyboard: false
+			})
+			nextMessage(message5);
             firstTime.placeEntity = false;
             firstTime.zoomToEntity = true;
-        }
+        }else if(firstTime.placeEntity2){
+			$('#tutorialModal').modal({
+				backdrop: 'static',
+				keyboard: false
+			});
+			$('#allEntities').addClass('breathing');
+			firstTime.allEntities = true;
+			selectedEntities = {};
+			$('#allEntities').toggleClass('buttonDown');
+			nextMessage(message12);
+			firstTime.placeEntity2 = false;
+
+		}
         var entity;
         var health = 100;
         entity = new Entity({
             'x': point.x,
             'y': point.y
-        }, health, boughtEntity, playerId, playerTeam);
+        }, health, boughtEntity, playerId, playerTeam, entityId);
+		entityId++;
         entity.healthbarColor = playerColor;
         entities[entity.id] = entity;
         boughtEntity = false;
         redrawBackground();
-    } else if (!entityIsBlocked(point.x, point.y)) {
-        if (firstTime.moveEntity) {
+    } else if (!entityIsBlocked(point.x, point.y) && !locks.move) {
+        /*if (firstTime.moveEntity) {
             $('#tutorialMove').fadeOut('slow')
             firstTime.moveEntity = false;
-        }
+        }*/
         setTimeout(function() { $('#blockedSpot').fadeOut('slow') }, 1000);
         var numMoving = LOO(selectedEntities);
         if (numMoving > 0) {
@@ -69,7 +101,9 @@ function clickGameContainer(e) {
                         endY: entity.heading.y,
                         id: entity.id
                     }
-                    socket.emit('entityPathRequest', coords);
+                    //socket.emit('entityPathRequest', coords);
+				entity.path = AI.AStar({x : ~~(coords.startX / 32), y : ~~(coords.startY / 32)}, {x : ~~(coords.endX / 32), y : ~~(coords.endY / 32)}, blockingTerrain, 500);
+					
                 }
             }
         }

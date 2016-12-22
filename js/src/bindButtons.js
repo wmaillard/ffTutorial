@@ -52,7 +52,11 @@ var BindButtons = {
                 firstTime.showShop = false;
                 firstTime.buyEntity = true;
                 $('.buy').addClass('breathing');
-            }
+            }else if(firstTime.buy2){
+				$('#showShop').removeClass('breathing');
+                firstTime.buy2 = false;
+                $('.buy').addClass('breathing');
+			}
             if ($('#shopStats').is(":visible")) {
                 $('#shopStats').hide();
             } else {
@@ -88,10 +92,32 @@ var BindButtons = {
                 if(firstTime.buyEntity){
                     $('.buy').removeClass('breathing');
                     firstTime.placeEntity = true;
+					firstTime.buyEntity2 = true;
                     firstTime.buyEntity = false;
-                    $('#tutorialAdd').show();
-                    
-                }
+					$('#tutorialModal').modal({
+						backdrop: 'static',
+						keyboard: false
+					})
+					$('#tutorialModalButton').text('Try It!').unbind('click').click(function(e){
+						$('#tutorialModal').modal('hide');
+					});
+					nextMessage(message4(name));
+                }else if(firstTime.buyEntity2){
+					entities[-1].selected = false;
+					$('.buy').removeClass('breathing');
+					firstTime.placeEntity2 = true;
+                    firstTime.buyEntity2 = false;
+					$('#tutorialModal').modal({
+						backdrop: 'static',
+						keyboard: false
+					})
+					$('#tutorialModalButton').text('Try It!').unbind('click').click(function(e){
+						$('#tutorialModal').modal('hide');
+						redrawBackground();
+					});
+					nextMessage(message11);
+					
+				}
                 boughtEntity = this.closest('.card').id;
                 if (entityInfo[boughtEntity].cost > playerGold) {
                     $("#playerGold").fadeIn(100).fadeOut(100).fadeIn(100).fadeOut(100).fadeIn(100);
@@ -110,18 +136,31 @@ var BindButtons = {
              setTimeout(function(){$('#introTeamBox').fadeOut('slow')}, 1000);
         })
         $('#allEntities').click(function() {
-            if(firstTime.selectEntity){
-                $('#allEntities').removeClass('breathing');
-                firstTime.selectEntity = false;
-                firstTime.moveEntity = true;
-                $('#tutorialMove').show();
-                
-            }
+
             if ($(this).hasClass('buttonDown')) {
                 deselectAllEntities();
             } else {
                 selectAllVisiblePlayerEntities(entities, playerId);
             }
+			if(firstTime.allEntities && LOO(selectedEntities) === 2){
+                $('#allEntities').removeClass('breathing');
+                firstTime.allEntities = false;
+				$('#tutorialModal').modal({
+					backdrop: 'static',
+					keyboard: false
+				});
+				$('#tutorialModalButton').unbind('click').text('More...').click(function(){
+					$('#tutorialModalButton').unbind('click').text('Try It').click(function(){
+						locks.move = false;
+						firstTime.goToOrange = true;
+						$('#tutorialModal').modal('hide');
+					});
+					nextMessage(message14);
+				});
+				nextMessage(message13);
+                
+            }
+			redrawBackground();
             $(this).toggleClass('buttonDown');
             return false;
         })
