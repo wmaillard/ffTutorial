@@ -96,44 +96,84 @@ var moveEntities = { //Currently mutates entities
 								})
 								$('#tutorialModalButton').click(function(){
 									$('#tutorialModal').modal('hide');
-									drainHealth(entity, entities[-1], false, function(){
-									$('#tutorialModal').modal({
-										backdrop: 'static',
-										keyboard: false
-									});
+									drainHealth(entities[1], entities[-1], false, function(){
+										playerGold += 40; 
+										$('#goldAmount').text(' ' + playerGold);
+										$('#tutorialModal').modal({
+											backdrop: 'static',
+											keyboard: false
+										});
 									
-									$('#tutorialModalButton').text('More...').unbind( "click" ).click(function(){
-										$('#tutorialModalButton').text('Try It!').click(function(){
-											circles.quarry = false;
-											redrawBackground();
+										$('#tutorialModalButton').text('More...').unbind( "click" ).click(function(){
+											$('#tutorialModalButton').text('Try It!').click(function(){
+												circles.quarry = false;
+												redrawBackground();
 
-											$('#showShop').addClass('breathing');
-											firstTime.buy2 = true;
-											$('#tutorialModal').modal('hide');
+												$('#showShop').addClass('breathing');
+												firstTime.buy2 = true;
+												$('#tutorialModal').modal('hide');
+											})
+											nextMessage(message10);
+											return false;
 										})
-										nextMessage(message10);
-										return false;
-									})
-									nextMessage(message9);
+										nextMessage(message9);
 									});
 								});
 								nextMessage(message8);
 							}
 						}else if(firstTime.goToOrange && withinCircle(entities[1], castles[1], castleRadius) && withinCircle(entities[2], castles[1], castleRadius)){
-							alert('Made it!');
+							$('#tutorialModal').modal({
+								backdrop: 'static',
+								keyboard: false
+							});
+							$('#tutorialModalButton').unbind('click').click(function(){
+								$('#tutorialModal').modal('hide');
+							});
+							nextMessage(message15);
+							entities[aiId] = new Entity({x : castles[1].x, y : castles[1].y + 120}, 100, 'orcPeon', -1, 'orange', aiId);
+							entities[aiId].healthbarColor = '#FFA343'
+							entities[aiId].walking = false;
+							aiId--;
+							entities[aiId] = new Entity({x : castles[1].x + 35, y : castles[1].y + 120}, 100, 'orcWarlord', -1, 'orange', aiId)
+							entities[aiId].healthbarColor = '#FFA343'
+							entities[aiId].walking = false;
+							aiId--;
+							redrawBackground();
 							firstTime.goToOrange = false;
+							firstTime.attackCastle = true;
 						}
-						
-					
-                   // moveEntities.setChange(entity.id, 'x', entity.heading.x);
-                   // moveEntities.setChange(entity.id, 'y', entity.heading.y);
-                }
+						else if(firstTime.attackCastle && withinCircle(entities[1], entities[-2])){
+							locks.move = true;
+							firstTime.attackCastel = false;
+							drainHealth(entities[2], entities[-3], true, function(){
+								drainCastle(castles[1], function(){
+										drainTeam(function(){
+											$('#tutorialModal').modal({
+												backdrop: 'static',
+												keyboard: false
+											});
+											nextMessage(message16);
+											$('#tutorialModalButton').text('Play Now!').unbind( "click" ).click(function(){
+												
+												$('body').empty().append('<div class="row"><div class="col-xs-10 offset-xs-1"><div class="spinner"><div class="cube1"></div><div class="cube2"></div></div></div></div>')
+												 window.location = 'http://fantasyfeuds.com';
+											})
+									});
+									
+								
+							});
+						});
+						drainHealth(entities[1], entities[-2], true);
+				}
+				}
+			
                 more = true;
-                if (!entity.walking) {
-                    entity.walking = true;
-                    //moveEntities.setChange(entity.id, 'walking', true);
-                }
-            } //Not walking
+			if (!entity.walking) {
+				entity.walking = true;
+				//moveEntities.setChange(entity.id, 'walking', true);
+			}
+				}
+             //Not walking
             else {
                 if (entity.walking) {
 					change = true;

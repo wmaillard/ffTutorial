@@ -34,15 +34,15 @@ function clickGameContainer(e) {
             $('#allEntities').toggleClass('buttonDown')
         }
         redrawBackground();
-    } else if (boughtEntity && playerTeam && !entityIsBlocked(point.x, point.y)) {
+    } else if (boughtEntity && playerTeam && !entityIsBlocked(point.x, point.y) && (firstTime.placeEntity && withinCircle(point, {x: castles[0].x, y: castles[0].y}, castleRadius) || firstTime.placeEntity2 && withinCircle(point, entities[1], 250))) {
         if (firstTime.placeEntity) {
+			/*Make sure that entities are redrawn when they move*/
 			setInterval(function(){
 				if(moveEntities.moveEntities(entities)){
 					redrawBackground()
 				};
-					
-					
 					}, 50)
+					
 			$('#tutorialModal').modal({
 				backdrop: 'static',
 				keyboard: false
@@ -72,6 +72,8 @@ function clickGameContainer(e) {
 		entityId++;
         entity.healthbarColor = playerColor;
         entities[entity.id] = entity;
+        playerGold -= entityInfo[boughtEntity].cost; 
+		$('#goldAmount').text(' ' + playerGold);
         boughtEntity = false;
         redrawBackground();
     } else if (!entityIsBlocked(point.x, point.y) && !locks.move) {
@@ -107,7 +109,7 @@ function clickGameContainer(e) {
                 }
             }
         }
-    } else {
+    } else if(!locks.move){
         if (boughtEntity || LOO(selectedEntities) > 0) {
             $('#blockedSpot').fadeIn('fast', function() {
                 setTimeout(function() { $('#blockedSpot').fadeOut('slow') }, 1000);

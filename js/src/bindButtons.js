@@ -51,11 +51,15 @@ var BindButtons = {
                 $('#showShop').removeClass('breathing');
                 firstTime.showShop = false;
                 firstTime.buyEntity = true;
-                $('.buy').addClass('breathing');
+                $('#dwarfSoldier button').addClass('breathing');
+				$('#elfFemale button').addClass('breathing');
             }else if(firstTime.buy2){
 				$('#showShop').removeClass('breathing');
                 firstTime.buy2 = false;
-                $('.buy').addClass('breathing');
+				$('#dwarfSoldier button').addClass('breathing');
+                if(playerGold >= 75){
+					$('#elfFemale button').addClass('breathing');
+				}
 			}
             if ($('#shopStats').is(":visible")) {
                 $('#shopStats').hide();
@@ -89,6 +93,11 @@ var BindButtons = {
         });
         $('.buy').each(function() {
             $(this).click(function() {
+                if (entityInfo[this.closest('.card').id].cost > playerGold) {
+                    $("#playerGold").fadeIn(100).fadeOut(100).fadeIn(100).fadeOut(100).fadeIn(100);
+                    boughtEntity = null;
+                    return false;
+                } 
                 if(firstTime.buyEntity){
                     $('.buy').removeClass('breathing');
                     firstTime.placeEntity = true;
@@ -119,16 +128,13 @@ var BindButtons = {
 					
 				}
                 boughtEntity = this.closest('.card').id;
-                if (entityInfo[boughtEntity].cost > playerGold) {
-                    $("#playerGold").fadeIn(100).fadeOut(100).fadeIn(100).fadeOut(100).fadeIn(100);
-                    boughtEntity = null;
-                } else {
+
                     $('#shopStats').hide();
                     $('#showShop').toggleClass('buttonDown')
                     if ($('#bottomNav').is(":visible")) {
                         $('#bottomNav').hide();
                     } else $('#bottomNav').show();
-                }
+               
                 return false;
             })
         })
@@ -164,5 +170,23 @@ var BindButtons = {
             $(this).toggleClass('buttonDown');
             return false;
         })
+		$('#forgot').click(function(){
+            if(firstTime.forgot){
+                $('#forgot').removeClass('breathing');
+                firstTime.forgot = false;
+                nextMessage(message3);
+                $('#tutorialModalButton').text('Try It!').unbind('click').click(function(e){
+						$('#showShop').addClass('breathing');
+						$('#tutorialModal').modal('hide');
+					});
+            }else{
+				$('#tutorialModalButton').unbind('click').click(function(e){
+						$('#tutorialModal').modal('hide');
+					});
+			}
+			$('#tutorialModal').modal('show');
+			return false;
+			})
+	
     }
 }

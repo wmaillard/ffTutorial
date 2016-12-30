@@ -64,16 +64,18 @@ function drawEntities(entities, ctx, lock, clear) {
         'N'
     ]
     ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-    for (var e in entities) {
+	var tutorialEntities = [-1, -2, -3, 1, 2];
+    for (var i in tutorialEntities) {
+		var e = tutorialEntities[i];
+		if(!entities[e]){
+			continue;
+		}
         var type = entities[e].type;
         if (!entities[e].id || !isInWindow(entities[e].x, entities[e].y, entityInfo[type].width, entityInfo[type].height)) {
             continue;
         }
         if (!entityInfo[type]) {
             return; //Takes care of race conditions when loading
-        }
-        if (entities[e].attacking && entities[e].walkingState === 2 && entities[e].health > 0) {
-            entities[e].walkingState = 1;
         }
         var img_x = entities[e].walkingState * entityInfo[type].width;
         if (!entities[e].directionPointing) {

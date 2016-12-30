@@ -1,7 +1,6 @@
  
 var imagesLoaded = 0;
 var numberOfImages = 1 + 29 * 2; //29 characters and 2 for each
-
 function anotherImageLoaded(){
     imagesLoaded++;
     $('.pace-progress').css({
@@ -31,11 +30,13 @@ function imagesDoneLoading() {
 				})
 				nextMessage(message2(name));
 				$('#tutorialModalButton').text('More...').click(function(e){
-					nextMessage(message3);
+					nextMessage(message301);
 					$('#tutorialModalButton').text('Try It!').click(function(e){
-						$('#showShop').addClass('breathing');
+						firstTime.forgot = true;
+						$('#forgot').addClass('breathing');
 						$('#tutorialModal').modal('hide');
 					});
+					
 				});
 			
                 $('#startInfo').toggle();

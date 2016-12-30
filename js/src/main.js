@@ -15,12 +15,14 @@ $(function() {
     BindButtons.bindAll();
     setWindowResizeProperties()
     bottomNavCenter();
-    setUpSocketListeners();
-    scene.load(level, ctxB, zoom);
-    backgroundOffset = { x: -2929.1425191861085, y: -8798.232238003477 };
     zoom = 0.045;
+    scene.load(level, ctxB, zoom);
+
+
     window.requestAnimationFrame(drawFrame);
-    window.requestAnimationFrame(function() { drawScoreBar(scores) });
+	zoomPanTo(castles[0].x, castles[0].y, zoom, { x: false, y: false }, true)
+	zoomToOne(castles[0].x, castles[0].y, .35);
+	drawScoreBar(scores) 
 });
 
 function drawScoreBar(scores) {
@@ -33,16 +35,16 @@ function drawScoreBar(scores) {
     var swordWidth = $('#sword span').width();
     var swordCenter = { y: $('#sword span').offset().top + swordHeight / 2, x: $('#sword span').offset().left + swordWidth / 2 };
     var leftRed = (.5 - sizeOfBar) * canvasWidth
-    var leftSide = (.5 - sizeOfBar) * canvasWidth + sizeOfBar * canvasWidth * (1 - orangePoints / maxPoints);
+    var leftSide = (.5 - sizeOfBar) * canvasWidth + sizeOfBar * canvasWidth * (1 - bluePoints / maxPoints);
     ctxI.fillStyle = 'red';
     ctxI.fillRect(leftRed, swordCenter.y, swordCenter.x - leftRed -(swordCenter.x - leftSide), swordHeight / 7);
-    ctxI.fillStyle = 'orange';
+    ctxI.fillStyle = 'blue';
     ctxI.fillRect(leftSide, swordCenter.y, swordCenter.x - leftSide, swordHeight / 7);
     var rightRed = sizeOfBar * canvasWidth;
-    var rightWidth = sizeOfBar * canvasWidth * (bluePoints / maxPoints);
+    var rightWidth = sizeOfBar * canvasWidth * (orangePoints / maxPoints);
     ctxI.fillStyle = 'red';
     ctxI.fillRect(swordCenter.x + rightWidth, swordCenter.y, rightRed - rightWidth, swordHeight / 7);
-    ctxI.fillStyle = 'blue';
+    ctxI.fillStyle = 'orange';
     ctxI.fillRect(swordCenter.x, swordCenter.y, rightWidth, swordHeight / 7);
 }
 
@@ -57,7 +59,7 @@ function buildStore() {
         }
         if (entityInfo[entity].image) {
             var id = ~~(count / 3)
-            $('#cards' + id).append('<div class="card text-xs-center" id = ' + entity + '><img class="card-img-top" src="' + entityInfo[entity].image + '" alt="Card image cap"><div class="card-block text-xs-center"><h4 class="card-title">' + entityInfo[entity].name + '</h4><p class="card-text"></p> <p>Attack</p><input type="text" data-provide="slider" data-slider-min="0" data-slider-max="10" data-slider-step="1" data-slider-value="' + (10 * entityInfo[entity].attack / 30) + '" data-slider-tooltip="hide" data-slider-enabled="false" /><p>Defense</p><input type="text" data-provide="slider" data-slider-min="0" data-slider-max="10" data-slider-step="1" data-slider-value="' + entityInfo[entity].defense + '" data-slider-tooltip="hide" data-slider-enabled="false" /><p class="card-text"><small class="text-muted">' + entityInfo[entity].cost + ' Gold Pieces</p><button type="button" class="btn btn-success buy">Buy</button></div>')
+            $('#cards' + id).append('<div class="card text-xs-center" id = ' + entity + '><img class="card-img-top" src="' + entityInfo[entity].image + '" alt="Card image cap"><div class="card-block text-xs-center"><h4 class="card-title">' + entityInfo[entity].name + '</h4><p class="card-text"></p> <p>Attack</p><input type="text" data-provide="slider" data-slider-min="0" data-slider-max="10" data-slider-step="1" data-slider-value="' + (10 * entityInfo[entity].attack / 30) + '" data-slider-tooltip="hide" data-slider-enabled="false" /><p>Defense</p><input type="text" data-provide="slider" data-slider-min="0" data-slider-max="10" data-slider-step="1" data-slider-value="' + entityInfo[entity].defense + '" data-slider-tooltip="hide" data-slider-enabled="false" /><p class="card-text"><small class="text-muted">' + entityInfo[entity].cost + ' Coins</p><button type="button" class="btn btn-success buy">Buy</button></div>')
             count++;
             top = false;
             bottom = false;

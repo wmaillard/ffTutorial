@@ -14,14 +14,14 @@ var level = 'megaMap';
 var levelWidth = 200;  //Dimensions of level in squares
 var levelHeight = 100;
 var newCan = document.createElement('canvas');  //Canvas used for drawing entities
-var playerColor = getRandomColor(); 
+var playerColor = "#208FE1"; 
 var playerId;
 var selectedEntities = {};
 var serverSentFullState = false;
 var size = 32;  //Width and height of map tile
 var socket;
 var zoom = 1; //starting zoom of map
-var playerGold = 500;
+var playerGold = 90;
 var zoomSpeed = .10;  //How fast to zoom in/out
 var zoomPanTimeoutRunning = false;
 var zoomPanCompletelyDone = true;

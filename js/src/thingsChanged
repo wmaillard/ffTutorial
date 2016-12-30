@@ -1,5 +1,0 @@
-globals
-preload
-drawmap
-blockingTerrain ->tutorialBlockingTerrain...Do I need blockingTerrain?
-playerControls
